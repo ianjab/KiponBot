@@ -1,17 +1,27 @@
-import requests
+# coding: UTF-8
+
+import requests, urllib2
 import urllib2
 
-def cria_link(content):
-    links = []
-    for line in content.split():
-        if "images/pt/ARC/" in line:
+def geraLinkImagem(content):
+	for line in content.split():
+		if "images/pt/ARC/" in line:
 			return "https://dailyverses.net/"+line[5:-1]
 
-pagina = requests.get("https://dailyverses.net/pt/versiculo-aleatorio-imagem")
-link = cria_link(pagina.content)
+def getConteudoPagina(url):
+	return requests.get(url)
 
-img_data = requests.get(link).content
+#Encontra a parte da pagina com a imagem
+pagina = getConteudoPagina("https://dailyverses.net/pt/versiculo-aleatorio-imagem")
+
+print pagina
+#Pega html da pagina da imagem
+link_imagem = geraLinkImagem(pagina.content)
+print link_imagem
+#Pega a imagem
+img_data = getConteudoPagina(link_imagem).content
+#Salva a imagem
 with open('imagem_proverbio.jpg', 'wb') as handler:
     handler.write(img_data)
     
-print "bot0125 feito"
+print "Imagem de versículo salva!"
